@@ -387,12 +387,22 @@ function renderFilters() {
   });
 }
 
-function linkChip(label, url, brandName) {
+/* Chips que muestran solo el ícono (sin texto) en la vista de tarjetas,
+   para no saturar. Seguimiento, Plan de medios y Reporte general mantienen
+   el texto porque a futuro podría haber más de un documento de la misma
+   plataforma (ej. dos hojas de seguimiento) y el nombre ayuda a distinguirlos. */
+const ICON_ONLY_LABELS = ["Web", "Meta Ads", "Google Ads", "TikTok Ads", "Analytics", "Shopify", "Mailchimp", "Drive"];
+
+function linkChip(label, url, brandName, opts = {}) {
   const icon = iconMarkup(label);
+  const displayText = opts.displayText !== undefined ? opts.displayText : label;
+  const iconOnly = opts.iconOnly !== undefined ? opts.iconOnly : ICON_ONLY_LABELS.includes(label);
+  const text = iconOnly ? "" : displayText;
+  const titleAttr = iconOnly ? ` title="${displayText}"` : "";
   if (url) {
-    return `<a class="link-chip track-link" href="${url}" target="_blank" rel="noopener" data-brand="${brandName}" data-label="${label}">${icon}${label}</a>`;
+    return `<a class="link-chip track-link" href="${url}" target="_blank" rel="noopener" data-brand="${brandName}" data-label="${label}"${titleAttr}>${icon}${text}</a>`;
   }
-  return `<span class="link-chip pending">${icon}${label}</span>`;
+  return `<span class="link-chip pending"${titleAttr}>${icon}${text}</span>`;
 }
 
 function buildLinksForType(brand, type) {
@@ -405,20 +415,13 @@ function buildLinksForType(brand, type) {
   if (wantAll || type === "ads") {
     if (brand.ads.meta && typeof brand.ads.meta === "object") {
       Object.entries(brand.ads.meta).forEach(([sede, url]) => {
-        chips.push(linkChip(`Meta Ads ${sede}`, url, brand.name));
+        chips.push(linkChip(`Meta Ads ${sede}`, url, brand.name, { displayText: sede, iconOnly: false }));
       });
     } else {
       chips.push(linkChip("Meta Ads", brand.ads.meta, brand.name));
     }
     if (brand.ads.google !== undefined) chips.push(linkChip("Google Ads", brand.ads.google, brand.name));
     if (brand.ads.tiktok !== undefined) chips.push(linkChip("TikTok Ads", brand.ads.tiktok, brand.name));
-  }
-  if (wantAll || type === "docs") {
-    if (brand.docs) {
-      chips.push(linkChip("Seguimiento", brand.docs.seguimiento, brand.name));
-      chips.push(linkChip("Plan de medios", brand.docs.plan, brand.name));
-      chips.push(linkChip("Reporte general", brand.docs.general, brand.name));
-    }
   }
   if (wantAll || type === "docs" || type === "accesos") {
     if (brand.analytics !== undefined) {
@@ -434,6 +437,13 @@ function buildLinksForType(brand, type) {
   if (wantAll || type === "drive") {
     if (brand.drive !== undefined) {
       chips.push(linkChip("Drive", brand.drive, brand.name));
+    }
+  }
+  if (wantAll || type === "docs") {
+    if (brand.docs) {
+      chips.push(linkChip("Reporte general", brand.docs.general, brand.name));
+      chips.push(linkChip("Plan de medios", brand.docs.plan, brand.name));
+      chips.push(linkChip("Seguimiento", brand.docs.seguimiento, brand.name));
     }
   }
   return chips.join("");
