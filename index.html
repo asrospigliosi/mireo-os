@@ -210,11 +210,6 @@
 
   <div class="status-line" id="status-line"></div>
 
-  <div id="recents-block" style="display:none; margin-bottom:20px;">
-    <div class="filter-label">Recientes</div>
-    <div class="chip-row" id="recents-row"></div>
-  </div>
-
   <div class="grid" id="grid"></div>
   <div id="access-view" style="display:none;"></div>
   <div class="no-results" id="no-results" style="display:none;">No hay marcas que coincidan.</div>
@@ -614,41 +609,7 @@ function render() {
   });
 }
 
-const RECENTS_KEY = "mireoRecentLinks";
-
-function getRecents() {
-  try { return JSON.parse(localStorage.getItem(RECENTS_KEY)) || []; }
-  catch (e) { return []; }
-}
-
-function recordRecent(brand, label, url) {
-  if (!brand || !label || !url) return;
-  let list = getRecents().filter(r => r.url !== url);
-  list.unshift({ brand, label, url });
-  list = list.slice(0, 4);
-  localStorage.setItem(RECENTS_KEY, JSON.stringify(list));
-  renderRecents();
-}
-
-function renderRecents() {
-  const block = document.getElementById("recents-block");
-  const row = document.getElementById("recents-row");
-  const list = getRecents();
-  if (!list.length) { block.style.display = "none"; return; }
-  block.style.display = "block";
-  row.innerHTML = list.map(r => {
-    const icon = iconMarkup(r.label);
-    return `<a class="link-chip track-link" href="${r.url}" target="_blank" rel="noopener" data-brand="${r.brand}" data-label="${r.label}">${icon}${r.brand} · ${r.label}</a>`;
-  }).join("");
-}
-
-document.addEventListener("click", (e) => {
-  const a = e.target.closest("a.track-link");
-  if (a) recordRecent(a.dataset.brand, a.dataset.label, a.getAttribute("href"));
-});
-
 render();
-renderRecents();
 </script>
 </body>
 </html>
