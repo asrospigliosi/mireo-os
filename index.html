@@ -40,11 +40,11 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding: 40px 24px 80px;
+    padding: 64px 48px 80px;
   }
   .wrap { max-width: 960px; margin: 0 auto; }
 
-  header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; gap: 16px; flex-wrap: wrap; }
+  header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; gap: 16px; flex-wrap: wrap; }
   .brand-title { font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
   .brand-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
 
@@ -68,31 +68,14 @@
     display: flex; align-items: center; justify-content: center;
   }
   .quick-link-dot i { font-size: 9px; color: var(--text-secondary); }
-
-  .filter-label {
-    font-size: 11px;
+  .brand-social-link {
     color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin: 0 0 8px;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    transition: color 0.12s;
   }
-  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .chip {
-    font-size: 13px;
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-secondary);
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.12s, border-color 0.12s, color 0.12s;
-  }
-  .chip:hover { border-color: var(--border-strong); }
-  .chip.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent-text); font-weight: 500; }
-  .chip i { font-size: 14px; margin-right: 5px; vertical-align: -2px; }
-
-  .status-line { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; min-height: 16px; }
+  .brand-social-link:hover { color: var(--text-secondary); }
+  .brand-social-link i { font-size: 15px; }
 
   .grid {
     display: grid;
@@ -136,41 +119,20 @@
 
   .empty-note { font-size: 12px; color: var(--text-muted); }
 
-  .no-results { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 14px; }
-
-  .access-section { margin-bottom: 22px; }
-  .access-section-title {
-    font-size: 13px; font-weight: 600; margin-bottom: 8px;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .access-section-title i { font-size: 15px; }
-  .access-section-title svg { vertical-align: -2px; }
-  .access-row {
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 13px; padding: 8px 12px; border-radius: 8px;
-    background: var(--surface); border: 1px solid var(--border); margin-bottom: 6px;
-    gap: 12px;
-  }
-  .access-row > span:first-child { flex-shrink: 0; }
-  .access-row a {
-    color: var(--accent-text); text-decoration: none;
-    display: flex; align-items: center; gap: 4px; font-size: 12px;
-    min-width: 0; max-width: 65%;
-  }
-  .access-row a .url-text {
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
-  }
-  .access-row a:hover { text-decoration: underline; }
-  .access-row a i { font-size: 13px; flex-shrink: 0; }
-  .access-empty { color: var(--text-muted); font-size: 12px; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <header>
-    <div>
+    <div style="display:flex; align-items:center; gap:8px;">
       <div class="brand-title">mireo® OS</div>
+      <a class="brand-social-link" href="https://www.mireoagencia.com" target="_blank" rel="noopener" title="Sitio web mireo" aria-label="Sitio web mireo">
+        <i class="ti ti-world"></i>
+      </a>
+      <a class="brand-social-link" href="https://instagram.com/mireoagencia" target="_blank" rel="noopener" title="Instagram mireo" aria-label="Instagram mireo">
+        <i class="ti ti-brand-instagram"></i>
+      </a>
     </div>
     <div class="header-right">
       <div class="quick-links">
@@ -194,25 +156,7 @@
     </div>
   </header>
 
-  <div class="filter-label">Tipo de acceso</div>
-  <div class="chip-row" id="type-filters"></div>
-
-  <div style="display:flex; align-items:flex-start; gap:20px; margin-bottom:20px; flex-wrap:wrap;">
-    <div style="flex:1; min-width:200px;">
-      <div class="filter-label">Marca</div>
-      <div class="chip-row" id="brand-filters" style="margin-bottom:0;"></div>
-    </div>
-    <div style="border-left:1px solid var(--border); padding-left:20px;">
-      <div class="filter-label">Grupo</div>
-      <div class="chip-row" id="group-filters" style="margin-bottom:0;"></div>
-    </div>
-  </div>
-
-  <div class="status-line" id="status-line"></div>
-
   <div class="grid" id="grid"></div>
-  <div id="access-view" style="display:none;"></div>
-  <div class="no-results" id="no-results" style="display:none;">No hay marcas que coincidan.</div>
 
 </div>
 
@@ -254,22 +198,6 @@ const BRANDS = [
   { name: "Avanzar Therapy", code: "AVT", group: null, logo: null, web: "https://www.avanzartherapyperu.com/", ads: { meta: { Miraflores: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1029848679355851&business_id=1711851329121005&global_scope_id=1711851329121005&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=", Surco: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=655442703744379&business_id=1711851329121005&global_scope_id=1711851329121005&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=" } } },
 ];
 /* ============================================================ */
-
-/* Grupos — marcas del mismo holding que a veces quieres ver juntas.
-   Se filtran aparte del filtro de Marca (no se combinan entre sí). */
-const GROUPS = [
-  { key: "O&M",      label: "O&M" },
-  { key: "Reprind",  label: "Reprind" },
-];
-
-const TYPES = [
-  { key: "all",       label: "Todas",      icon: "ti-apps" },
-  { key: "web",       label: "Web",        icon: "ti-world" },
-  { key: "ads",       label: "Ads",        icon: "ti-speakerphone" },
-  { key: "docs",      label: "Reportes", icon: "ti-file-text" },
-  { key: "accesos",   label: "Plataformas", icon: "ti-key" },
-  { key: "drive",     label: "Drive",      icon: "ti-folder" },
-];
 
 const LINK_ICONS = {
   "Web": "ti-world",
@@ -353,11 +281,6 @@ function iconMarkup(label) {
   return LINK_ICONS[key] ? `<i class="ti ${LINK_ICONS[key]}"></i>` : "";
 }
 
-let activeType = "all";
-let activeBrand = "all";
-let activeGroup = null;
-let viewMode = "cards"; // "cards" | "access"
-
 function initials(name) {
   return name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
 }
@@ -368,49 +291,6 @@ function brandCode(brand) {
 
 function shortUrl(url) {
   return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
-}
-
-function renderFilters() {
-  const typeRow = document.getElementById("type-filters");
-  typeRow.innerHTML = "";
-  TYPES.forEach(t => {
-    const chip = document.createElement("div");
-    chip.className = "chip" + (activeType === t.key ? " active" : "");
-    chip.innerHTML = `<i class="ti ${t.icon}"></i>${t.label}`;
-    chip.onclick = () => { activeType = t.key; render(); };
-    typeRow.appendChild(chip);
-  });
-
-  const accessChip = document.createElement("div");
-  accessChip.className = "chip" + (viewMode === "access" ? " active" : "");
-  accessChip.innerHTML = `<i class="ti ti-list-details"></i>Por acceso`;
-  accessChip.onclick = () => { viewMode = (viewMode === "access" ? "cards" : "access"); render(); };
-  typeRow.appendChild(accessChip);
-
-  const brandRow = document.getElementById("brand-filters");
-  brandRow.innerHTML = "";
-  const allChip = document.createElement("div");
-  allChip.className = "chip" + (viewMode === "cards" && activeBrand === "all" && !activeGroup ? " active" : "");
-  allChip.textContent = "Todas";
-  allChip.onclick = () => { viewMode = "cards"; activeBrand = "all"; activeGroup = null; render(); };
-  brandRow.appendChild(allChip);
-  BRANDS.forEach(b => {
-    const chip = document.createElement("div");
-    chip.className = "chip" + (viewMode === "cards" && !activeGroup && activeBrand === b.name ? " active" : "");
-    chip.textContent = b.name;
-    chip.onclick = () => { viewMode = "cards"; activeBrand = b.name; activeGroup = null; render(); };
-    brandRow.appendChild(chip);
-  });
-
-  const groupRow = document.getElementById("group-filters");
-  groupRow.innerHTML = "";
-  GROUPS.forEach(g => {
-    const chip = document.createElement("div");
-    chip.className = "chip" + (viewMode === "cards" && activeGroup === g.key ? " active" : "");
-    chip.textContent = g.label;
-    chip.onclick = () => { viewMode = "cards"; activeGroup = g.key; activeBrand = "all"; render(); };
-    groupRow.appendChild(chip);
-  });
 }
 
 /* Chips que muestran solo el ícono (sin texto) en la vista de tarjetas,
@@ -475,126 +355,11 @@ function buildLinksForType(brand, type) {
   return chips.join("");
 }
 
-function getSubItemsForType(typeKey) {
-  switch (typeKey) {
-    case "web":
-      return [{ label: "Web", get: b => b.web }];
-    case "ads": {
-      const items = [
-        { label: "Meta Ads", get: b => b.ads.meta },
-        { label: "Google Ads", get: b => b.ads.google },
-      ];
-      if (BRANDS.some(b => b.ads.tiktok !== undefined)) {
-        items.push({ label: "TikTok Ads", get: b => b.ads.tiktok, applicable: b => b.ads.tiktok !== undefined });
-      }
-      return items;
-    }
-    case "docs":
-      return [
-        { label: "Seguimiento", get: b => b.docs.seguimiento, applicable: b => !!b.docs },
-        { label: "Plan de medios", get: b => b.docs.plan, applicable: b => !!b.docs },
-        { label: "Reporte general", get: b => b.docs.general, applicable: b => !!b.docs },
-        { label: "Analytics", get: b => b.analytics, applicable: b => b.analytics !== undefined },
-      ];
-    case "accesos": {
-      const items = [
-        { label: "Analytics", get: b => b.analytics, applicable: b => b.analytics !== undefined },
-        { label: "Shopify", get: b => b.accesos.shopify, applicable: b => !!b.accesos },
-      ];
-      if (BRANDS.some(b => b.accesos && b.accesos.mailchimp !== undefined)) {
-        items.push({ label: "Mailchimp", get: b => b.accesos.mailchimp, applicable: b => !!b.accesos && b.accesos.mailchimp !== undefined });
-      }
-      return items;
-    }
-    case "drive":
-      return [{ label: "Drive", get: b => b.drive, applicable: b => b.drive !== undefined }];
-    default:
-      return [];
-  }
-}
-
-function renderAccessView(container) {
-  container.innerHTML = "";
-  const typesToShow = activeType === "all" ? TYPES.filter(t => t.key !== "all") : TYPES.filter(t => t.key === activeType);
-  let hasContent = false;
-
-  typesToShow.forEach(t => {
-    getSubItemsForType(t.key).forEach(item => {
-      const brandsForItem = BRANDS.filter(b => !item.applicable || item.applicable(b));
-      if (!brandsForItem.length) return;
-
-      // Si el valor es un objeto (ej. Meta Ads con varias sedes), se
-      // expande en una fila por sede: "Marca · Sede".
-      const rows = [];
-      brandsForItem.forEach(b => {
-        const val = item.get(b);
-        if (val && typeof val === "object") {
-          Object.entries(val).forEach(([sede, url]) => {
-            rows.push({ label: `${b.name} · ${sede}`, brandName: b.name, url });
-          });
-        } else {
-          rows.push({ label: b.name, brandName: b.name, url: val });
-        }
-      });
-      if (!rows.length) return;
-      hasContent = true;
-
-      const section = document.createElement("div");
-      section.className = "access-section";
-      const icon = iconMarkup(item.label);
-      const rowsHtml = rows.map(r => {
-        const right = r.url
-          ? `<a class="track-link" href="${r.url}" target="_blank" rel="noopener" data-brand="${r.brandName}" data-label="${item.label}" title="${r.url}"><span class="url-text">${shortUrl(r.url)}</span><i class="ti ti-external-link"></i></a>`
-          : `<span class="access-empty">—</span>`;
-        return `<div class="access-row"><span>${r.label}</span>${right}</div>`;
-      }).join("");
-
-      section.innerHTML = `<div class="access-section-title">${icon}${item.label}</div>${rowsHtml}`;
-      container.appendChild(section);
-    });
-  });
-
-  return hasContent;
-}
-
 function render() {
-  renderFilters();
-
   const grid = document.getElementById("grid");
-  const accessView = document.getElementById("access-view");
-  const noResults = document.getElementById("no-results");
-  const statusLine = document.getElementById("status-line");
-
-  if (viewMode === "access") {
-    grid.style.display = "none";
-    accessView.style.display = "block";
-    grid.innerHTML = "";
-    const hasContent = renderAccessView(accessView);
-    noResults.style.display = hasContent ? "none" : "block";
-    statusLine.textContent = activeType !== "all"
-      ? `Vista por acceso · tipo "${TYPES.find(t => t.key === activeType).label}"`
-      : "Vista por acceso · todos los tipos";
-    return;
-  }
-
-  accessView.style.display = "none";
-  accessView.innerHTML = "";
-  grid.style.display = "grid";
-
-  let visible = BRANDS.filter(b =>
-    activeGroup ? b.group === activeGroup : (activeBrand === "all" || b.name === activeBrand)
-  );
-
-  const parts = [];
-  if (activeType !== "all") parts.push(`tipo "${TYPES.find(t => t.key === activeType).label}"`);
-  if (activeGroup) parts.push(`grupo "${activeGroup}"`);
-  else if (activeBrand !== "all") parts.push(`marca "${activeBrand}"`);
-  statusLine.textContent = parts.length ? `Filtrando por ${parts.join(" + ")}` : "";
-
   grid.innerHTML = "";
-  noResults.style.display = visible.length ? "none" : "block";
 
-  visible.forEach(b => {
+  BRANDS.forEach(b => {
     const card = document.createElement("div");
     card.className = "card";
     const avatarInner = b.logo ? `<img src="${b.logo}" alt="${b.name}" onerror="this.parentElement.textContent='${brandCode(b)}';">` : brandCode(b);
@@ -603,7 +368,7 @@ function render() {
         <div class="avatar">${avatarInner}</div>
         <div class="card-name">${b.name}</div>
       </div>
-      <div class="link-list">${buildLinksForType(b, activeType)}</div>
+      <div class="link-list">${buildLinksForType(b, "all")}</div>
     `;
     grid.appendChild(card);
   });
