@@ -77,10 +77,26 @@
   .brand-social-link:hover { color: var(--text-secondary); }
   .brand-social-link i { font-size: 15px; }
 
+  .group-section { margin-bottom: 32px; }
+  .group-section:last-child { margin-bottom: 0; }
+  .group-title {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 12px;
+  }
+
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
+  }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
   }
 
   .card {
@@ -88,19 +104,24 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 16px 18px;
+    min-height: 150px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
   }
-  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 8px 0; min-width: 0; }
   .avatar {
-    width: 38px; height: 38px; border-radius: 9px;
-    background: var(--accent-bg); color: var(--accent-text);
+    width: 17px; height: 17px;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 12px; letter-spacing: -0.2px; flex-shrink: 0;
-    overflow: hidden;
+    flex-shrink: 0; color: #3797EF;
   }
-  .avatar img { width: 100%; height: 100%; object-fit: contain; background: #FFFFFF; }
-  .card-name { font-weight: 600; font-size: 15px; }
+  .avatar svg { width: 100%; height: 100%; }
+  .avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 9px; }
+  .card-name { font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  .link-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .link-rows { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .link-row { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; }
+  .link-row:empty { display: none; }
   .link-chip {
     display: inline-flex; align-items: center; gap: 5px;
     font-size: 12px; padding: 5px 10px;
@@ -119,6 +140,15 @@
   }
   .link-chip.pending:hover { background: none; border-color: var(--border); }
 
+  .card-footer { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .card-footer a, .card-footer span {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); text-decoration: none;
+    transition: color 0.12s;
+  }
+  .card-footer a:hover { color: var(--text); }
+  .card-footer .pending { color: var(--text-muted); opacity: 0.45; filter: grayscale(1); cursor: default; }
+
   .empty-note { font-size: 12px; color: var(--text-muted); }
 
 </style>
@@ -130,10 +160,10 @@
     <div style="display:flex; align-items:center; gap:8px;">
       <div class="brand-title">mireo® OS</div>
       <a class="brand-social-link" href="https://www.mireoagencia.com" target="_blank" rel="noopener" title="Sitio web mireo" aria-label="Sitio web mireo">
-        <i class="ti ti-world"></i>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="flex-shrink:0;"><circle cx="12" cy="12" r="11"/><ellipse cx="12" cy="12" rx="4.3" ry="11" fill="none" stroke="var(--surface)" stroke-width="1.3"/><line x1="1" y1="12" x2="23" y2="12" stroke="var(--surface)" stroke-width="1.3"/><path d="M3.5 6.5 Q12 9 20.5 6.5" fill="none" stroke="var(--surface)" stroke-width="1.2"/><path d="M3.5 17.5 Q12 15 20.5 17.5" fill="none" stroke="var(--surface)" stroke-width="1.2"/></svg>
       </a>
       <a class="brand-social-link" href="https://instagram.com/mireoagencia" target="_blank" rel="noopener" title="Instagram mireo" aria-label="Instagram mireo">
-        <i class="ti ti-brand-instagram"></i>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="flex-shrink:0;"><path d="M12 0C8.74 0 8.333.014 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.014 8.333 0 8.74 0 12s.014 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.986 8.74 24 12 24s3.667-.014 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.014-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.014 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.36 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
       </a>
     </div>
     <div class="header-right">
@@ -158,7 +188,15 @@
     </div>
   </header>
 
-  <div class="grid" id="grid"></div>
+  <div class="group-section">
+    <div class="group-title">Sales</div>
+    <div class="grid" id="grid-sales"></div>
+  </div>
+
+  <div class="group-section">
+    <div class="group-title">Leads</div>
+    <div class="grid" id="grid-leads"></div>
+  </div>
 
 </div>
 
@@ -190,20 +228,32 @@
    ese caso se muestra un chip/fila por sede, con el label "Meta Ads Sede".
    ============================================================ */
 const BRANDS = [
-  { name: "Koketa", code: "KOK", group: "Reprind", logo: null, web: "https://www.koketa.com/", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=237930767117528&business_id=1936279589935494&global_scope_id=1936279589935494&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Cpurchase_roas%3Aomni_purchase&attribution_windows=default&date=2026-03-01_2026-03-07%2Cthis_month&insights_date=2026-03-01_2026-03-07%2Cthis_month", google: "https://ads.google.com/aw/campaigns?ocid=6808352631&workspaceId=0&euid=1627945411&__u=8458008939&uscid=6808352631&__c=7465838719&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/126xt_SVI_WIYIOOrF4ezoaWm64eAHsdc86FybnXJpuo/edit?gid=1526226749#gid=1526226749", seguimiento: "https://docs.google.com/spreadsheets/d/1XESJUAZKkYsAGzUxIhwFdiLCCqiyftK_GfKxJB_ReKA/edit?gid=1918060092#gid=1918060092", general: "https://datastudio.google.com/u/0/reporting/c00d135f-7154-461e-b356-500b67c44b9a/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/koketa-online?no_redirect=true" }, drive: "https://drive.google.com/drive/folders/1rHq0kHggsl60hp5btaNto2wYQ__Cpy4p", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a385151580p525403687/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
-  { name: "The Box", code: "TBX", group: "O&M", logo: null, web: "https://thebox.com.pe/", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1375532696023567&business_id=144307969512265&global_scope_id=144307969512265&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Cpurchase_roas%3Aomni_purchase&attribution_windows=default&date=2026-03-01_2026-03-10%2Cthis_month&insights_date=2026-03-01_2026-03-10%2Cthis_month&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING%1ECONTAINS_ALL%1E%22[%5C%22[THE%20BOX]%5C%22]%22", google: "https://ads.google.com/aw/campaigns?ocid=8076181841&ascid=8076181841&euid=1627945411&__u=8458008939&uscid=1128799660&__c=2167211340&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/1ARxQ8r_b7CJX_HPl8Rx1ziFQis3d5CgLJxmWyjkCFio/edit?gid=1526226749#gid=1526226749", seguimiento: "https://docs.google.com/spreadsheets/d/1eOJwx-ED7rUaxP1Kq6lgOOYGm3-ZPTLG8mYwBE0vtQ0/edit?gid=1048585388#gid=1048585388", general: "https://lookerstudio.google.com/u/0/reporting/a26d967c-cf76-448b-8eb8-c78f4d275b22/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/the-box-peru-sac/analytics", mailchimp: "https://us6.admin.mailchimp.com/campaigns/?page=1&searchText=TBX" }, drive: "https://drive.google.com/drive/folders/1mYylSusTJcNh-YeOw1tI9rEQQ3XJceEf", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a81348111p345123364/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=5387058481&r=5387063409" },
-  { name: "Coolbrands", code: "COB", group: "O&M", logo: null, web: "https://coolbrands.pe/", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1375532696023567&business_id=144307969512265&global_scope_id=144307969512265&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Cpurchase_roas%3Aomni_purchase&attribution_windows=default&date=2026-03-01_2026-03-10%2Cthis_month&insights_date=2026-03-01_2026-03-10%2Cthis_month&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING%1ECONTAINS_ALL%1E%22[%5C%22[COOLBRANDS]%5C%22]%22", google: "https://ads.google.com/aw/campaigns?ocid=8080559262&ascid=8080559262&euid=1627945411&__u=8458008939&uscid=1128799660&__c=2167211340&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/19A4DQw0EXQyF_Y1wSDF3AkFyN_MEGx1DQrm4UcnsOZE/edit?gid=1526226749#gid=1526226749", seguimiento: "https://docs.google.com/spreadsheets/d/16-AVnO6MjEDjaBQ6Z9BRkKdlwqDIrLSYCiYexRxJyMc/edit?gid=1999751784#gid=1999751784", general: "https://datastudio.google.com/u/0/reporting/cbf971f0-a66b-4ac0-95fe-342c17fe79cc/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/coolbrandsperu/", mailchimp: "https://us6.admin.mailchimp.com/campaigns/?page=1&searchText=COB" }, drive: "https://drive.google.com/drive/folders/1VJdDeqjjhs08yZBwQ6roPkr6eeaP47ZI", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a187389221p396799613/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
-  { name: "CROMO", code: "CRO", group: null, logo: null, web: "https://cromopolos.com/", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1222685089498201&business_id=194587377840846&global_scope_id=194587377840846&date=2026-03-01_2026-03-13%2Cthis_month&insights_date=2026-03-01_2026-03-13%2Cthis_month", google: "https://ads.google.com/aw/campaigns?ocid=8026491243&workspaceId=0&euid=1627945411&__u=8458008939&uscid=8026491243&__c=2886180307&authuser=0&subid=ww-ww-xs-ip-awhc-a-ogb_dash%21o2-PE-es-xs-ip-ogb_ai-sf-dw-uao-agembe-acce" }, docs: { plan: "https://docs.google.com/spreadsheets/d/1LK8nGIqdk-Act1bjMJvXe9KqHMol7mI4ckBmSrcLLow/edit?gid=1249293528#gid=1249293528", seguimiento: "https://docs.google.com/spreadsheets/d/1CYhz61SQEr-vPKLpH1Yln-AbAAZ6SIRArEsW1S1NNGs/edit?gid=32446709#gid=32446709", general: "https://datastudio.google.com/u/0/reporting/8483e5eb-c12f-4aa9-a89b-262bf47c172a/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/cromoperu" }, drive: "https://drive.google.com/drive/folders/1836E8_hUTaAm2qGNcNVNvuDY7WyIX2O0", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a384577704p524802621/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
-  { name: "the friend of Pablo", code: "TFP", group: null, logo: null, web: "https://thefriendofpablo.pe/", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=322338366248995&business_id=581206129729745&global_scope_id=581206129729745&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Alink_click%2Cactions%3Aonsite_conversion.total_messaging_connection%2Cactions%3Aonsite_conversion.messaging_first_reply%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Ccost_per_action_type%3Aomni_purchase&attribution_windows=default&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING_SET%1ECONTAINS_ALL%1E[%22TFOP%20%7C%22]", google: "https://ads.google.com/aw/campaigns?ocid=8015344268&workspaceId=0&euid=1627945411&__u=8458008939&uscid=8015344268&__c=8645023532&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/19VCdqO4u-B7XhuTwlv3K4BjkwDdsp0RKfd7AE-_XetY/edit", seguimiento: "https://docs.google.com/spreadsheets/d/1dnupM0Ummaeu6USPp9HxkJTIoscrr46s9LJLYoHaLn8/edit?gid=504747791#gid=504747791", general: "https://datastudio.google.com/u/0/reporting/f9ef9751-23c8-43a5-abf1-b0aebd82fc3a/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/the-friend-of-pablo" }, drive: "https://drive.google.com/drive/folders/1aMBimfMLxUKcnCw0eNX0qFC4ThOiiqzQ", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a148797051p211103684/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=aaa1661c-b9ff-45be-8138-5572bb6bf3a1&collectionId=10819104498&r=lifecycle-traffic-acquisition-v2" },
-  { name: "MICRO", code: "MIC", group: null, logo: null, web: "https://microperu.com/", ads: { meta: null, google: null }, docs: { plan: null, seguimiento: null, general: null }, accesos: { shopify: null }, drive: null, analytics: null },
-  { name: "Workout", code: "WKO", group: null, logo: null, web: "https://www.workout.com.pe/", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=653697225575882&business_id=145228227051761&global_scope_id=145228227051761&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cactions%3Aonsite_conversion.total_messaging_connection%2Cactions%3Aonsite_conversion.messaging_first_reply%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Ccost_per_action_type%3Aomni_purchase&attribution_windows=default&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING_SET%1ECONTAINS_ALL%1E[%22WORKOUT%22]", google: "https://ads.google.com/aw/campaigns?ocid=8353879825&euid=1627945411&__u=8458008939&uscid=8353879825&__c=6440596425&authuser=0&workspaceId=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/1OavOHND3wO0nA6K2lBYuF-DYG3u9HJkZGGK4RusIm1Y/edit?gid=191271930#gid=191271930", seguimiento: "https://docs.google.com/spreadsheets/d/1OpP3OnH4xLDVCl2zrhhv7NQ8Qz1bUxXCRpD0FtS-soM/edit?gid=1918060092#gid=1918060092", general: "https://datastudio.google.com/u/0/reporting/acb5bd09-68ce-4f8d-9b3f-5b979d08b4e3/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/workout-wo/" }, drive: "https://drive.google.com/drive/folders/14Uy5YbMjoqGJipa8a5N9JPy-RwovmB9g", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a180175586p393018417/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
-  { name: "Jockey", code: "JOC", group: "Reprind", logo: null, web: "https://www.jockey.com.pe/", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=3238960092919348&business_id=2700374530300569&global_scope_id=2700374530300569&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING_SET%1ECONTAINS_ALL%1E[%22JO%22]" }, docs: { plan: null, seguimiento: null, general: null }, accesos: { shopify: "https://admin.shopify.com/store/jockey-shop-online/" }, drive: "https://drive.google.com/drive/folders/1Lr1BVLYVg73Tfh6Tkw3ZgAjk31G_EX62", analytics: null },
-  { name: "Avanzar Therapy", code: "AVT", group: null, logo: null, web: "https://www.avanzartherapyperu.com/", ads: { meta: { Miraflores: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1029848679355851&business_id=1711851329121005&global_scope_id=1711851329121005&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=", Surco: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=655442703744379&business_id=1711851329121005&global_scope_id=1711851329121005&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=" } } },
+  { name: "Koketa", code: "KOK", group: "Reprind", logo: null, web: "https://www.koketa.com/", facebook: "https://www.facebook.com/SoyKoketa/", instagram: "https://www.instagram.com/koketaoficial/", tiktok: "https://www.tiktok.com/@koketaoficial", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=237930767117528&business_id=1936279589935494&global_scope_id=1936279589935494&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Cpurchase_roas%3Aomni_purchase&attribution_windows=default&date=2026-03-01_2026-03-07%2Cthis_month&insights_date=2026-03-01_2026-03-07%2Cthis_month", google: "https://ads.google.com/aw/campaigns?ocid=6808352631&workspaceId=0&euid=1627945411&__u=8458008939&uscid=6808352631&__c=7465838719&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/126xt_SVI_WIYIOOrF4ezoaWm64eAHsdc86FybnXJpuo/edit?gid=1526226749#gid=1526226749", seguimiento: "https://docs.google.com/spreadsheets/d/1XESJUAZKkYsAGzUxIhwFdiLCCqiyftK_GfKxJB_ReKA/edit?gid=1918060092#gid=1918060092", general: "https://datastudio.google.com/u/0/reporting/c00d135f-7154-461e-b356-500b67c44b9a/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/koketa-online?no_redirect=true" }, drive: "https://drive.google.com/drive/folders/1rHq0kHggsl60hp5btaNto2wYQ__Cpy4p", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a385151580p525403687/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
+  { name: "The Box", code: "TBX", group: "O&M", logo: null, web: "https://thebox.com.pe/", facebook: "https://www.facebook.com/TheBoxPeru/", instagram: "https://www.instagram.com/theboxperu/", tiktok: "https://www.tiktok.com/@theboxperu", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1375532696023567&business_id=144307969512265&global_scope_id=144307969512265&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Cpurchase_roas%3Aomni_purchase&attribution_windows=default&date=2026-03-01_2026-03-10%2Cthis_month&insights_date=2026-03-01_2026-03-10%2Cthis_month&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING%1ECONTAINS_ALL%1E%22[%5C%22[THE%20BOX]%5C%22]%22", google: "https://ads.google.com/aw/campaigns?ocid=8076181841&ascid=8076181841&euid=1627945411&__u=8458008939&uscid=1128799660&__c=2167211340&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/1ARxQ8r_b7CJX_HPl8Rx1ziFQis3d5CgLJxmWyjkCFio/edit?gid=1526226749#gid=1526226749", seguimiento: "https://docs.google.com/spreadsheets/d/1eOJwx-ED7rUaxP1Kq6lgOOYGm3-ZPTLG8mYwBE0vtQ0/edit?gid=1048585388#gid=1048585388", general: "https://lookerstudio.google.com/u/0/reporting/a26d967c-cf76-448b-8eb8-c78f4d275b22/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/the-box-peru-sac/analytics", mailchimp: "https://us6.admin.mailchimp.com/campaigns/?page=1&searchText=TBX" }, drive: "https://drive.google.com/drive/folders/1mYylSusTJcNh-YeOw1tI9rEQQ3XJceEf", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a81348111p345123364/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=5387058481&r=5387063409" },
+  { name: "Coolbrands", code: "COB", group: "O&M", logo: null, web: "https://coolbrands.pe/", facebook: "https://www.facebook.com/coolbrandspe/", instagram: "https://www.instagram.com/coolbrands_peru/", tiktok: "https://www.tiktok.com/@coolbrandsperu", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1375532696023567&business_id=144307969512265&global_scope_id=144307969512265&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Cpurchase_roas%3Aomni_purchase&attribution_windows=default&date=2026-03-01_2026-03-10%2Cthis_month&insights_date=2026-03-01_2026-03-10%2Cthis_month&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING%1ECONTAINS_ALL%1E%22[%5C%22[COOLBRANDS]%5C%22]%22", google: "https://ads.google.com/aw/campaigns?ocid=8080559262&ascid=8080559262&euid=1627945411&__u=8458008939&uscid=1128799660&__c=2167211340&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/19A4DQw0EXQyF_Y1wSDF3AkFyN_MEGx1DQrm4UcnsOZE/edit?gid=1526226749#gid=1526226749", seguimiento: "https://docs.google.com/spreadsheets/d/16-AVnO6MjEDjaBQ6Z9BRkKdlwqDIrLSYCiYexRxJyMc/edit?gid=1999751784#gid=1999751784", general: "https://datastudio.google.com/u/0/reporting/cbf971f0-a66b-4ac0-95fe-342c17fe79cc/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/coolbrandsperu/", mailchimp: "https://us6.admin.mailchimp.com/campaigns/?page=1&searchText=COB" }, drive: "https://drive.google.com/drive/folders/1VJdDeqjjhs08yZBwQ6roPkr6eeaP47ZI", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a187389221p396799613/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
+  { name: "CROMO", code: "CRO", group: null, logo: null, web: "https://cromopolos.com/", facebook: "https://www.facebook.com/cromotienda", instagram: "https://www.instagram.com/cromopolos/", tiktok: "https://www.tiktok.com/@cromo.polos", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1222685089498201&business_id=194587377840846&global_scope_id=194587377840846&date=2026-03-01_2026-03-13%2Cthis_month&insights_date=2026-03-01_2026-03-13%2Cthis_month", google: "https://ads.google.com/aw/campaigns?ocid=8026491243&workspaceId=0&euid=1627945411&__u=8458008939&uscid=8026491243&__c=2886180307&authuser=0&subid=ww-ww-xs-ip-awhc-a-ogb_dash%21o2-PE-es-xs-ip-ogb_ai-sf-dw-uao-agembe-acce" }, docs: { plan: "https://docs.google.com/spreadsheets/d/1LK8nGIqdk-Act1bjMJvXe9KqHMol7mI4ckBmSrcLLow/edit?gid=1249293528#gid=1249293528", seguimiento: "https://docs.google.com/spreadsheets/d/1CYhz61SQEr-vPKLpH1Yln-AbAAZ6SIRArEsW1S1NNGs/edit?gid=32446709#gid=32446709", general: "https://datastudio.google.com/u/0/reporting/8483e5eb-c12f-4aa9-a89b-262bf47c172a/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/cromoperu" }, drive: "https://drive.google.com/drive/folders/1836E8_hUTaAm2qGNcNVNvuDY7WyIX2O0", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a384577704p524802621/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
+  { name: "the friend of Pablo", code: "TFP", group: null, logo: null, web: "https://thefriendofpablo.pe/", facebook: "https://www.facebook.com/thefriendofpablo/", instagram: "https://www.instagram.com/thefriendofpablo/", tiktok: "https://www.tiktok.com/@thefriendofpablo", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=322338366248995&business_id=581206129729745&global_scope_id=581206129729745&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Alink_click%2Cactions%3Aonsite_conversion.total_messaging_connection%2Cactions%3Aonsite_conversion.messaging_first_reply%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Ccost_per_action_type%3Aomni_purchase&attribution_windows=default&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING_SET%1ECONTAINS_ALL%1E[%22TFOP%20%7C%22]", google: "https://ads.google.com/aw/campaigns?ocid=8015344268&workspaceId=0&euid=1627945411&__u=8458008939&uscid=8015344268&__c=8645023532&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/19VCdqO4u-B7XhuTwlv3K4BjkwDdsp0RKfd7AE-_XetY/edit", seguimiento: "https://docs.google.com/spreadsheets/d/1dnupM0Ummaeu6USPp9HxkJTIoscrr46s9LJLYoHaLn8/edit?gid=504747791#gid=504747791", general: "https://datastudio.google.com/u/0/reporting/f9ef9751-23c8-43a5-abf1-b0aebd82fc3a/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/the-friend-of-pablo" }, drive: "https://drive.google.com/drive/folders/1aMBimfMLxUKcnCw0eNX0qFC4ThOiiqzQ", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a148797051p211103684/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=aaa1661c-b9ff-45be-8138-5572bb6bf3a1&collectionId=10819104498&r=lifecycle-traffic-acquisition-v2" },
+  { name: "MICRO", code: "MIC", group: null, logo: null, web: "https://microperu.com/", facebook: "https://www.facebook.com/MicroPeru/", instagram: "https://www.instagram.com/micro_peru/", tiktok: "https://www.tiktok.com/@microperu", ads: { meta: null, google: null }, docs: { plan: null, seguimiento: null, general: null }, accesos: { shopify: null }, drive: null, analytics: null },
+  { name: "Workout", code: "WKO", group: null, logo: null, web: "https://www.workout.com.pe/", facebook: "https://www.facebook.com/woworkout", instagram: "https://www.instagram.com/workout_wo/", tiktok: null, ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=653697225575882&business_id=145228227051761&global_scope_id=145228227051761&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cactions%3Aonsite_conversion.total_messaging_connection%2Cactions%3Aonsite_conversion.messaging_first_reply%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Ccost_per_action_type%3Aomni_purchase&attribution_windows=default&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING_SET%1ECONTAINS_ALL%1E[%22WORKOUT%22]", google: "https://ads.google.com/aw/campaigns?ocid=8353879825&euid=1627945411&__u=8458008939&uscid=8353879825&__c=6440596425&authuser=0&workspaceId=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/1OavOHND3wO0nA6K2lBYuF-DYG3u9HJkZGGK4RusIm1Y/edit?gid=191271930#gid=191271930", seguimiento: "https://docs.google.com/spreadsheets/d/1OpP3OnH4xLDVCl2zrhhv7NQ8Qz1bUxXCRpD0FtS-soM/edit?gid=1918060092#gid=1918060092", general: "https://datastudio.google.com/u/0/reporting/acb5bd09-68ce-4f8d-9b3f-5b979d08b4e3/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/workout-wo/" }, drive: "https://drive.google.com/drive/folders/14Uy5YbMjoqGJipa8a5N9JPy-RwovmB9g", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a180175586p393018417/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
+  { name: "Jockey", code: "JOC", group: "Reprind", logo: null, web: "https://www.jockey.com.pe/", facebook: "https://www.facebook.com/people/Jockey-Per%C3%BA/61578013049742/", instagram: null, tiktok: null, ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=3238960092919348&business_id=2700374530300569&global_scope_id=2700374530300569&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING_SET%1ECONTAINS_ALL%1E[%22JO%22]" }, docs: { plan: null, seguimiento: null, general: null }, accesos: { shopify: "https://admin.shopify.com/store/jockey-shop-online/" }, drive: "https://drive.google.com/drive/folders/1Lr1BVLYVg73Tfh6Tkw3ZgAjk31G_EX62", analytics: null },
+  { name: "Avanzar Therapy", code: "AVT", group: null, logo: null, web: "https://www.avanzartherapyperu.com/", facebook: "https://www.facebook.com/avanzartherapy/", instagram: "https://www.instagram.com/avanzartherapy/", tiktok: null, ads: { meta: { Miraflores: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1029848679355851&business_id=1711851329121005&global_scope_id=1711851329121005&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=", Surco: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=655442703744379&business_id=1711851329121005&global_scope_id=1711851329121005&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=" } } },
+  { name: "Ventia", code: "VEN", group: null, logo: null, web: "https://www.ventia-latam.com/", facebook: null, instagram: "https://www.instagram.com/ventia_latam/", tiktok: "https://www.tiktok.com/@ventia_latam", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1453250373181751&business_id=792512220155282&global_scope_id=792512220155282&date=2026-07-01_2026-07-28%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-28%2Cthis_month&insights_comparison_date=" }, docs: { plan: null, seguimiento: null }, drive: null, analytics: null },
 ];
 /* ============================================================ */
 
 const LINK_ICONS = {
-  "Web": "ti-world",
+};
+
+/* Íconos rellenos (no lineados) para los links de redes de cada marca en
+   el pie de la tarjeta. Se mantienen en gris (currentColor) siempre,
+   activos o pendientes, en vez de usar los colores oficiales de marca.
+   "web" usa var(--surface) para las líneas del globo, así se adapta
+   automáticamente al fondo de la tarjeta en modo claro u oscuro. */
+const SOCIAL_SVGS = {
+  web: '<circle cx="12" cy="12" r="11"/><ellipse cx="12" cy="12" rx="4.3" ry="11" fill="none" stroke="var(--surface)" stroke-width="1.3"/><line x1="1" y1="12" x2="23" y2="12" stroke="var(--surface)" stroke-width="1.3"/><path d="M3.5 6.5 Q12 9 20.5 6.5" fill="none" stroke="var(--surface)" stroke-width="1.2"/><path d="M3.5 17.5 Q12 15 20.5 17.5" fill="none" stroke="var(--surface)" stroke-width="1.2"/>',
+  facebook: '<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>',
+  instagram: '<path d="M12 0C8.74 0 8.333.014 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.014 8.333 0 8.74 0 12s.014 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.986 8.74 24 12 24s3.667-.014 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.014-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.014 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.36 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>',
+  tiktok: '<path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>',
 };
 
 /* Logos de marca reales — path SVG oficial de cada logo (vía simple-icons),
@@ -300,84 +350,139 @@ function shortUrl(url) {
    para no saturar. Seguimiento, Plan de medios y Reporte general mantienen
    el texto porque a futuro podría haber más de un documento de la misma
    plataforma (ej. dos hojas de seguimiento) y el nombre ayuda a distinguirlos. */
-const ICON_ONLY_LABELS = ["Web", "Meta Ads", "Google Ads", "TikTok Ads", "Analytics", "Shopify", "Mailchimp", "Drive"];
+const ICON_ONLY_LABELS = ["Web", "Meta Ads", "Google Ads", "TikTok Ads", "Analytics", "Shopify", "Mailchimp", "Drive", "Reporte general"];
 
 function linkChip(label, url, brandName, opts = {}) {
   const icon = iconMarkup(label);
   const displayText = opts.displayText !== undefined ? opts.displayText : label;
   const iconOnly = opts.iconOnly !== undefined ? opts.iconOnly : ICON_ONLY_LABELS.includes(label);
   const text = iconOnly ? "" : displayText;
-  const titleAttr = iconOnly ? ` title="${displayText}"` : "";
+  const titleAttr = text !== label ? ` title="${label}"` : "";
   if (url) {
     return `<a class="link-chip track-link" href="${url}" target="_blank" rel="noopener" data-brand="${brandName}" data-label="${label}"${titleAttr}>${icon}${text}</a>`;
   }
   return `<span class="link-chip pending"${titleAttr}>${icon}${text}</span>`;
 }
 
-function buildLinksForType(brand, type) {
+// Fila 1: accesos web/plataforma — Shopify, Analytics, Looker (reporte general), Drive
+function buildRow1(brand) {
   const chips = [];
-  const wantAll = type === "all";
-
-  if (wantAll || type === "web") {
-    chips.push(linkChip("Web", brand.web, brand.name));
+  if (brand.accesos) {
+    chips.push(linkChip("Shopify", brand.accesos.shopify, brand.name));
   }
-  if (wantAll || type === "ads") {
-    if (brand.ads.meta && typeof brand.ads.meta === "object") {
-      Object.entries(brand.ads.meta).forEach(([sede, url]) => {
-        chips.push(linkChip(`Meta Ads ${sede}`, url, brand.name, { displayText: sede, iconOnly: false }));
-      });
-    } else {
-      chips.push(linkChip("Meta Ads", brand.ads.meta, brand.name));
-    }
-    if (brand.ads.google !== undefined) chips.push(linkChip("Google Ads", brand.ads.google, brand.name));
-    if (brand.ads.tiktok !== undefined) chips.push(linkChip("TikTok Ads", brand.ads.tiktok, brand.name));
+  if (brand.analytics !== undefined) {
+    chips.push(linkChip("Analytics", brand.analytics, brand.name));
   }
-  if (wantAll || type === "docs" || type === "accesos") {
-    if (brand.analytics !== undefined) {
-      chips.push(linkChip("Analytics", brand.analytics, brand.name));
-    }
+  if (brand.docs && "general" in brand.docs) {
+    chips.push(linkChip("Reporte general", brand.docs.general, brand.name));
   }
-  if (wantAll || type === "accesos") {
-    if (brand.accesos) {
-      chips.push(linkChip("Shopify", brand.accesos.shopify, brand.name));
-      if (brand.accesos.mailchimp !== undefined) chips.push(linkChip("Mailchimp", brand.accesos.mailchimp, brand.name));
-    }
-  }
-  if (wantAll || type === "drive") {
-    if (brand.drive !== undefined) {
-      chips.push(linkChip("Drive", brand.drive, brand.name));
-    }
-  }
-  if (wantAll || type === "docs") {
-    if (brand.docs) {
-      chips.push(linkChip("Reporte general", brand.docs.general, brand.name));
-      chips.push(linkChip("Plan de medios", brand.docs.plan, brand.name));
-      chips.push(linkChip("Seguimiento", brand.docs.seguimiento, brand.name));
-    }
+  if (brand.drive !== undefined) {
+    chips.push(linkChip("Drive", brand.drive, brand.name));
   }
   return chips.join("");
 }
 
-function render() {
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
+// Fila 2: Ads — Google Ads, Meta Ads + otros links (Mailchimp, TikTok Ads, etc.)
+function buildRow2(brand) {
+  const chips = [];
+  if (brand.ads.google !== undefined) chips.push(linkChip("Google Ads", brand.ads.google, brand.name));
+  if (brand.ads.meta && typeof brand.ads.meta === "object") {
+    Object.entries(brand.ads.meta).forEach(([sede, url]) => {
+      chips.push(linkChip(`Meta Ads ${sede}`, url, brand.name, { displayText: sede, iconOnly: false }));
+    });
+  } else {
+    chips.push(linkChip("Meta Ads", brand.ads.meta, brand.name));
+  }
+  // otros links
+  if (brand.accesos && brand.accesos.mailchimp !== undefined) {
+    chips.push(linkChip("Mailchimp", brand.accesos.mailchimp, brand.name));
+  }
+  if (brand.ads.tiktok !== undefined) chips.push(linkChip("TikTok Ads", brand.ads.tiktok, brand.name));
+  return chips.join("");
+}
 
-  BRANDS.forEach(b => {
-    const card = document.createElement("div");
-    card.className = "card";
-    const avatarInner = b.logo ? `<img src="${b.logo}" alt="${b.name}" onerror="this.parentElement.textContent='${brandCode(b)}';">` : brandCode(b);
-    card.innerHTML = `
-      <div class="card-head">
-        <div class="avatar">${avatarInner}</div>
-        <div class="card-name">${b.name}</div>
-      </div>
-      <div class="link-list">${buildLinksForType(b, "all")}</div>
-    `;
-    grid.appendChild(card);
-  });
+// Fila 3: Plan de medios, Seguimiento
+function buildRow3(brand) {
+  const chips = [];
+  if (brand.docs) {
+    if ("plan" in brand.docs) chips.push(linkChip("Plan de medios", brand.docs.plan, brand.name));
+    if ("seguimiento" in brand.docs) chips.push(linkChip("Seguimiento", brand.docs.seguimiento, brand.name));
+  }
+  return chips.join("");
+}
+
+function socialIcon(key, url, title) {
+  const svg = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="flex-shrink:0;">${SOCIAL_SVGS[key]}</svg>`;
+  if (url) {
+    return `<a href="${url}" target="_blank" rel="noopener" title="${title}" aria-label="${title}">${svg}</a>`;
+  }
+  return `<span class="pending" title="${title} (pendiente)">${svg}</span>`;
+}
+
+/* Marcas del grupo "Leads" (embudo de leads en vez de conversiones).
+   Se muestran en su propia sección, en este orden específico. Cualquier
+   marca que no esté en esta lista cae en "Sales". */
+const LEADS_BRANDS = ["Ventia", "Avanzar Therapy"];
+
+const VERIFIED_BADGE_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.78L23,12M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z"/></svg>';
+
+function buildCard(b) {
+  const card = document.createElement("div");
+  card.className = "card";
+  const avatarInner = b.logo ? `<img src="${b.logo}" alt="${b.name}" onerror="this.parentElement.innerHTML='${VERIFIED_BADGE_SVG}';">` : VERIFIED_BADGE_SVG;
+  card.innerHTML = `
+    <div class="card-head">
+      <div class="avatar">${avatarInner}</div>
+      <div class="card-name">${b.name}</div>
+    </div>
+    <div class="link-rows">
+      <div class="link-row">${buildRow2(b)}</div>
+      <div class="link-row">${buildRow1(b)}</div>
+      <div class="link-row">${buildRow3(b)}</div>
+    </div>
+    <div class="card-footer">
+      ${socialIcon("web", b.web, "Web")}
+      ${socialIcon("facebook", b.facebook, "Facebook")}
+      ${socialIcon("instagram", b.instagram, "Instagram")}
+      ${socialIcon("tiktok", b.tiktok, "TikTok")}
+    </div>
+  `;
+  return card;
+}
+
+function renderGroup(gridId, brands) {
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = "";
+  brands.forEach(b => grid.appendChild(buildCard(b)));
+}
+
+function render() {
+  const leadsBrands = LEADS_BRANDS.map(name => BRANDS.find(b => b.name === name)).filter(Boolean);
+  const salesBrands = BRANDS.filter(b => !LEADS_BRANDS.includes(b.name));
+
+  renderGroup("grid-sales", salesBrands);
+  renderGroup("grid-leads", leadsBrands);
+
+  equalizeCardHeights();
+}
+
+function equalizeCardHeights() {
+  const cards = document.querySelectorAll(".card");
+  if (!cards.length) return;
+  cards.forEach(c => { c.style.height = "auto"; });
+  let max = 0;
+  cards.forEach(c => { max = Math.max(max, c.offsetHeight); });
+  cards.forEach(c => { c.style.height = max + "px"; });
 }
 
 render();
+
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(equalizeCardHeights, 150);
+});
+window.addEventListener("load", equalizeCardHeights);
 </script>
 </body>
 </html>
