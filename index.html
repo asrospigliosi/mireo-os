@@ -154,8 +154,31 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
+    position: relative;
   }
-  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 8px 0; min-width: 0; }
+  .card-check {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    border: 1.5px solid var(--border-strong);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .card-check i { font-size: 14px; }
+  .card-check.checked {
+    background: #1D9E75;
+    border-color: #1D9E75;
+    color: #FFFFFF;
+  }
+  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 8px 32px 8px 0; min-width: 0; }
   .avatar {
     width: 17px; height: 17px;
     display: flex; align-items: center; justify-content: center;
@@ -486,6 +509,9 @@ function buildCard(b) {
   card.className = "card";
   const avatarInner = b.logo ? `<img src="${b.logo}" alt="${b.name}" onerror="this.parentElement.innerHTML='${VERIFIED_BADGE_SVG}';">` : VERIFIED_BADGE_SVG;
   card.innerHTML = `
+    <button class="card-check" type="button" aria-pressed="false" aria-label="Marcar ${b.name}">
+      <i class="ti ti-check" aria-hidden="true"></i>
+    </button>
     <div class="card-head">
       <div class="avatar">${avatarInner}</div>
       <div class="card-name">${b.name}</div>
@@ -502,6 +528,12 @@ function buildCard(b) {
       ${socialIcon("tiktok", b.tiktok, "TikTok")}
     </div>
   `;
+  const checkBtn = card.querySelector(".card-check");
+  checkBtn.addEventListener("click", () => {
+    const checked = checkBtn.classList.toggle("checked");
+    checkBtn.setAttribute("aria-pressed", checked ? "true" : "false");
+  });
+
   return card;
 }
 
