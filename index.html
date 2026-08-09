@@ -173,9 +173,14 @@
     transition: background-color 0.15s, border-color 0.15s, color 0.15s;
   }
   .card-check i { font-size: 14px; }
-  .card-check.checked {
+  .card-check.state-green {
     background: #1D9E75;
     border-color: #1D9E75;
+    color: #FFFFFF;
+  }
+  .card-check.state-amber {
+    background: #EF9F27;
+    border-color: #EF9F27;
     color: #FFFFFF;
   }
   .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 8px 32px 8px 0; min-width: 0; }
@@ -529,9 +534,13 @@ function buildCard(b) {
     </div>
   `;
   const checkBtn = card.querySelector(".card-check");
+  const checkStates = ["", "state-green", "state-amber"];
+  let checkState = 0;
   checkBtn.addEventListener("click", () => {
-    const checked = checkBtn.classList.toggle("checked");
-    checkBtn.setAttribute("aria-pressed", checked ? "true" : "false");
+    checkState = (checkState + 1) % checkStates.length;
+    checkBtn.classList.remove("state-green", "state-amber");
+    if (checkStates[checkState]) checkBtn.classList.add(checkStates[checkState]);
+    checkBtn.setAttribute("aria-pressed", checkState !== 0 ? "true" : "false");
   });
 
   return card;
