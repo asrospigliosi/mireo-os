@@ -154,36 +154,17 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    position: relative;
   }
-  .card-check {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 24px;
-    height: 24px;
-    border-radius: 7px;
-    border: 1.5px solid var(--border-strong);
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 8px 0; min-width: 0; }
+  .card-head-left { display: flex; align-items: center; gap: 12px; min-width: 0; overflow: hidden; }
+  .card-social { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .card-social a, .card-social span {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); text-decoration: none;
+    transition: color 0.12s;
   }
-  .card-check i { font-size: 14px; }
-  .card-check.state-green {
-    background: #1D9E75;
-    border-color: #1D9E75;
-    color: #FFFFFF;
-  }
-  .card-check.state-amber {
-    background: #EF9F27;
-    border-color: #EF9F27;
-    color: #FFFFFF;
-  }
-  .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 8px 32px 8px 0; min-width: 0; }
+  .card-social a:hover { color: var(--text); }
+  .card-social .pending { color: var(--text-muted); opacity: 0.45; filter: grayscale(1); cursor: default; }
   .avatar {
     width: 17px; height: 17px;
     display: flex; align-items: center; justify-content: center;
@@ -191,7 +172,7 @@
   }
   .avatar svg { width: 100%; height: 100%; }
   .avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 9px; }
-  .card-name { font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .card-name { font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 
   .link-rows { display: flex; flex-direction: column; gap: 6px; flex: 1; }
   .link-row { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; }
@@ -213,15 +194,6 @@
     filter: grayscale(1);
   }
   .link-chip.pending:hover { background: none; border-color: var(--border); }
-
-  .card-footer { display: flex; align-items: center; gap: 10px; margin-top: 24px; }
-  .card-footer a, .card-footer span {
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text-muted); text-decoration: none;
-    transition: color 0.12s;
-  }
-  .card-footer a:hover { color: var(--text); }
-  .card-footer .pending { color: var(--text-muted); opacity: 0.45; filter: grayscale(1); cursor: default; }
 
   .empty-note { font-size: 12px; color: var(--text-muted); }
 
@@ -519,34 +491,24 @@ function buildCard(b) {
   card.className = "card";
   const avatarInner = b.logo ? `<img src="${b.logo}" alt="${b.name}" onerror="this.parentElement.innerHTML='${VERIFIED_BADGE_SVG}';">` : VERIFIED_BADGE_SVG;
   card.innerHTML = `
-    <button class="card-check" type="button" aria-pressed="false" aria-label="Marcar ${b.name}">
-      <i class="ti ti-check" aria-hidden="true"></i>
-    </button>
     <div class="card-head">
-      <div class="avatar">${avatarInner}</div>
-      <div class="card-name">${b.name}</div>
+      <div class="card-head-left">
+        <div class="avatar">${avatarInner}</div>
+        <div class="card-name">${b.name}</div>
+      </div>
+      <div class="card-social">
+        ${socialIcon("web", b.web, "Web")}
+        ${socialIcon("facebook", b.facebook, "Facebook")}
+        ${socialIcon("instagram", b.instagram, "Instagram")}
+        ${socialIcon("tiktok", b.tiktok, "TikTok")}
+      </div>
     </div>
     <div class="link-rows">
       <div class="link-row">${buildRow2(b)}</div>
       <div class="link-row">${buildRow1(b)}</div>
       <div class="link-row">${buildRow3(b)}</div>
     </div>
-    <div class="card-footer">
-      ${socialIcon("web", b.web, "Web")}
-      ${socialIcon("facebook", b.facebook, "Facebook")}
-      ${socialIcon("instagram", b.instagram, "Instagram")}
-      ${socialIcon("tiktok", b.tiktok, "TikTok")}
-    </div>
   `;
-  const checkBtn = card.querySelector(".card-check");
-  const checkStates = ["", "state-green", "state-amber"];
-  let checkState = 0;
-  checkBtn.addEventListener("click", () => {
-    checkState = (checkState + 1) % checkStates.length;
-    checkBtn.classList.remove("state-green", "state-amber");
-    if (checkStates[checkState]) checkBtn.classList.add(checkStates[checkState]);
-    checkBtn.setAttribute("aria-pressed", checkState !== 0 ? "true" : "false");
-  });
 
   return card;
 }
