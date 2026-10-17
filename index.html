@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <style>
   :root {
-    --bg: #FAFAF8;
+    --bg: #FAFAF8; --chip-bg: #F7F6F3; --card-border: #E7E5DF; --badge-bg: currentColor; --badge-check: #FFFFFF; --check-scale: 1; --avatar-size: 17px;
     --surface: #FFFFFF;
     --border: #E7E5DF;
     --border-strong: #D6D3CA;
@@ -37,9 +37,9 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #171715;
-      --surface: #1F1F1C;
-      --border: #33322E;
+      --bg: #0F0F0E;
+      --surface: #1A1A18; --chip-bg: #060606; --card-border: transparent; --badge-bg: #0A0A09; --badge-check: currentColor; --check-scale: .85; --avatar-size: 19px;
+      --border: #2E2D2A;
       --border-strong: #454339;
       --text: #F2F1EC;
       --text-secondary: #A9A79F;
@@ -52,7 +52,7 @@
     }
   }
   :root[data-theme="light"] {
-    --bg: #FAFAF8;
+    --bg: #FAFAF8; --chip-bg: #F7F6F3; --card-border: #E7E5DF; --badge-bg: currentColor; --badge-check: #FFFFFF; --check-scale: 1; --avatar-size: 17px;
     --surface: #FFFFFF;
     --border: #E7E5DF;
     --border-strong: #D6D3CA;
@@ -66,9 +66,9 @@
     --windsor-fg: #FFFFFF;
   }
   :root[data-theme="dark"] {
-    --bg: #171715;
-    --surface: #1F1F1C;
-    --border: #33322E;
+    --bg: #0F0F0E;
+    --surface: #1A1A18; --chip-bg: #060606; --card-border: transparent; --badge-bg: #0A0A09; --badge-check: currentColor; --check-scale: .85; --avatar-size: 19px;
+    --border: #2E2D2A;
     --border-strong: #454339;
     --text: #F2F1EC;
     --text-secondary: #A9A79F;
@@ -158,15 +158,15 @@
 
   .card {
     background: var(--surface);
-    border: 1px solid var(--border);
+    border: 1px solid var(--card-border);
     border-radius: 12px;
-    padding: 16px 18px 24px;
+    padding: 17px 18px 25px;
     min-height: 150px;
     min-width: 0;
     display: flex;
     flex-direction: column;
   }
-  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 8px 0; min-width: 0; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; padding: 8px 0; min-width: 0; }
   .card-head-left { display: flex; align-items: center; gap: 12px; min-width: 0; overflow: hidden; }
   .card-social { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
   .card-social a, .card-social span {
@@ -177,17 +177,20 @@
   .card-social a:hover { color: var(--text); }
   .card-social .pending { color: var(--text-muted); opacity: 0.45; filter: grayscale(1); cursor: default; }
   .avatar {
-    width: 17px; height: 17px;
+    width: var(--avatar-size); height: var(--avatar-size);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; color: #3797EF;
   }
   .avatar svg { width: 100%; height: 100%; }
+  .avatar svg path + path { transform: scale(var(--check-scale)); transform-origin: 12px 12px; }
   .avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 9px; }
   .card-name { font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 
   .link-rows { display: flex; flex-direction: column; gap: 6px; }
   .link-row { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; }
   .link-row:empty { display: none; }
+  .link-row.compact { gap: 4px; }
+  .link-row.compact .link-chip { padding: 5px 8px; gap: 4px; }
   .link-chip {
     display: inline-flex; align-items: center; gap: 5px;
     font-size: 12px; padding: 5px 10px;
@@ -197,6 +200,19 @@
   .link-chip i { font-size: 14px; }
   .link-chip svg { vertical-align: -2px; }
   .link-chip:hover { border-color: var(--border-strong); background: var(--bg); }
+  .link-chip:not(.doc-chip):not(.pending) { background: var(--chip-bg); border-color: transparent; }
+  .link-chip:not(.doc-chip):not(.pending):hover { background: var(--chip-bg); border-color: transparent; }
+  .link-chip.doc-chip {
+    position: relative; border: none; border-radius: 4px 0 4px 4px;
+    background: #0F9D58; color: #fff; font-weight: 500;
+    padding: 6px 12px 6px 9px; font-size: 11px; line-height: 14px;
+    clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%);
+  }
+  .link-chip.doc-chip::after {
+    content: ""; position: absolute; top: 0; right: 0; width: 9px; height: 9px;
+    background: linear-gradient(225deg, transparent 50%, #87CEAC 50%);
+  }
+  .link-chip.doc-chip:hover { background: #12B068; border: none; }
   .link-chip.pending {
     color: var(--text-muted);
     border-style: dashed;
@@ -215,13 +231,7 @@
 
   <header>
     <div style="display:flex; align-items:center; gap:8px;">
-      <div class="brand-title">mireo® OS</div>
-      <a class="brand-social-link" href="https://www.mireoagencia.com" target="_blank" rel="noopener" title="Sitio web mireo" aria-label="Sitio web mireo">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="flex-shrink:0;"><circle cx="12" cy="12" r="11"/><ellipse cx="12" cy="12" rx="4.3" ry="11" fill="none" stroke="var(--surface)" stroke-width="1.3"/><line x1="1" y1="12" x2="23" y2="12" stroke="var(--surface)" stroke-width="1.3"/><path d="M3.5 6.5 Q12 9 20.5 6.5" fill="none" stroke="var(--surface)" stroke-width="1.2"/><path d="M3.5 17.5 Q12 15 20.5 17.5" fill="none" stroke="var(--surface)" stroke-width="1.2"/></svg>
-      </a>
-      <a class="brand-social-link" href="https://instagram.com/mireoagencia" target="_blank" rel="noopener" title="Instagram mireo" aria-label="Instagram mireo">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="flex-shrink:0;"><path d="M12 0C8.74 0 8.333.014 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.014 8.333 0 8.74 0 12s.014 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.986 8.74 24 12 24s3.667-.014 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.014-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.014 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.36 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
-      </a>
+      <div class="brand-title">mireo</div>
     </div>
     <div class="header-right">
       <div class="quick-links">
@@ -236,20 +246,6 @@
             <svg viewBox="0 0 256 229" width="16" height="16"><path fill="#0066da" d="m19.354 196.034l11.29 19.5c2.346 4.106 5.718 7.332 9.677 9.678q17.009-21.591 23.68-33.137q6.77-11.717 16.641-36.655q-26.604-3.502-40.32-3.502q-13.165 0-40.322 3.502c0 4.545 1.173 9.09 3.519 13.196z"/><path fill="#ea4335" d="M215.681 225.212c3.96-2.346 7.332-5.572 9.677-9.677l4.692-8.064l22.434-38.855a26.57 26.57 0 0 0 3.518-13.196q-27.315-3.502-40.247-3.502q-13.899 0-40.248 3.502q9.754 25.075 16.422 36.655q6.724 11.683 23.752 33.137"/><path fill="#00832d" d="M128.001 73.311q19.68-23.768 27.125-36.655q5.996-10.377 13.196-33.137C164.363 1.173 159.818 0 155.126 0h-54.25C96.184 0 91.64 1.32 87.68 3.519q9.16 26.103 15.544 37.154q7.056 12.213 24.777 32.638"/><path fill="#2684fc" d="M175.36 155.42H80.642l-40.32 69.792c3.958 2.346 8.503 3.519 13.195 3.519h148.968c4.692 0 9.238-1.32 13.196-3.52z"/><path fill="#00ac47" d="M128.001 73.311L87.681 3.52c-3.96 2.346-7.332 5.571-9.678 9.677L3.519 142.224A26.57 26.57 0 0 0 0 155.42h80.642z"/><path fill="#ffba00" d="m215.242 77.71l-37.243-64.514c-2.345-4.106-5.718-7.331-9.677-9.677l-40.32 69.792l47.358 82.109h80.496c0-4.546-1.173-9.09-3.519-13.196z"/></svg>
           </a>
         </div>
-        <div class="quick-links-group">
-          <a class="quick-link" href="https://chatgpt.com/" target="_blank" rel="noopener" title="ChatGPT" aria-label="ChatGPT">
-            <svg viewBox="0 0 256 260" width="16" height="16"><path fill="var(--text)" d="M239.184 106.203a64.72 64.72 0 0 0-5.576-53.103C219.452 28.459 191 15.784 163.213 21.74A65.586 65.586 0 0 0 52.096 45.22a64.72 64.72 0 0 0-43.23 31.36c-14.31 24.602-11.061 55.634 8.033 76.74a64.67 64.67 0 0 0 5.525 53.102c14.174 24.65 42.644 37.324 70.446 31.36a64.72 64.72 0 0 0 48.754 21.744c28.481.025 53.714-18.361 62.414-45.481a64.77 64.77 0 0 0 43.229-31.36c14.137-24.558 10.875-55.423-8.083-76.483m-97.56 136.338a48.4 48.4 0 0 1-31.105-11.255l1.535-.87l51.67-29.825a8.6 8.6 0 0 0 4.247-7.367v-72.85l21.845 12.636c.218.111.37.32.409.563v60.367c-.056 26.818-21.783 48.545-48.601 48.601M37.158 197.93a48.35 48.35 0 0 1-5.781-32.589l1.534.921l51.722 29.826a8.34 8.34 0 0 0 8.441 0l63.181-36.425v25.221a.87.87 0 0 1-.358.665l-52.335 30.184c-23.257 13.398-52.97 5.431-66.404-17.803M23.549 85.38a48.5 48.5 0 0 1 25.58-21.333v61.39a8.29 8.29 0 0 0 4.195 7.316l62.874 36.272l-21.845 12.636a.82.82 0 0 1-.767 0L41.353 151.53c-23.211-13.454-31.171-43.144-17.804-66.405zm179.466 41.695l-63.08-36.63L161.73 77.86a.82.82 0 0 1 .768 0l52.233 30.184a48.6 48.6 0 0 1-7.316 87.635v-61.391a8.54 8.54 0 0 0-4.4-7.213m21.742-32.69l-1.535-.922l-51.619-30.081a8.39 8.39 0 0 0-8.492 0L99.98 99.808V74.587a.72.72 0 0 1 .307-.665l52.233-30.133a48.652 48.652 0 0 1 72.236 50.391zM88.061 139.097l-21.845-12.585a.87.87 0 0 1-.41-.614V65.685a48.652 48.652 0 0 1 79.757-37.346l-1.535.87l-51.67 29.825a8.6 8.6 0 0 0-4.246 7.367zm11.868-25.58L128.067 97.3l28.188 16.218v32.434l-28.086 16.218l-28.188-16.218z"/></svg>
-          </a>
-          <a class="quick-link" href="https://claude.ai/new" target="_blank" rel="noopener" title="Claude" aria-label="Claude">
-            <svg viewBox="0 0 256 257" width="16" height="16"><path fill="#d97757" d="m50.228 170.321l50.357-28.257l.843-2.463l-.843-1.361h-2.462l-8.426-.518l-28.775-.778l-24.952-1.037l-24.175-1.296l-6.092-1.297L0 125.796l.583-3.759l5.12-3.434l7.324.648l16.202 1.101l24.304 1.685l17.629 1.037l26.118 2.722h4.148l.583-1.685l-1.426-1.037l-1.101-1.037l-25.147-17.045l-27.22-18.017l-14.258-10.37l-7.713-5.25l-3.888-4.925l-1.685-10.758l7-7.713l9.397.649l2.398.648l9.527 7.323l20.35 15.75L94.817 91.9l3.889 3.24l1.555-1.102l.195-.777l-1.75-2.917l-14.453-26.118l-15.425-26.572l-6.87-11.018l-1.814-6.61c-.648-2.723-1.102-4.991-1.102-7.778l7.972-10.823L71.42 0l10.63 1.426l4.472 3.888l6.61 15.101l10.694 23.786l16.591 32.34l4.861 9.592l2.592 8.879l.973 2.722h1.685v-1.556l1.36-18.211l2.528-22.36l2.463-28.776l.843-8.1l4.018-9.722l7.971-5.25l6.222 2.981l5.12 7.324l-.713 4.73l-3.046 19.768l-5.962 30.98l-3.889 20.739h2.268l2.593-2.593l10.499-13.934l17.628-22.036l7.778-8.749l9.073-9.657l5.833-4.601h11.018l8.1 12.055l-3.628 12.443l-11.342 14.388l-9.398 12.184l-13.48 18.147l-8.426 14.518l.778 1.166l2.01-.194l30.46-6.481l16.462-2.982l19.637-3.37l8.88 4.148l.971 4.213l-3.5 8.62l-20.998 5.184l-24.628 4.926l-36.682 8.685l-.454.324l.519.648l16.526 1.555l7.065.389h17.304l32.21 2.398l8.426 5.574l5.055 6.805l-.843 5.184l-12.962 6.611l-17.498-4.148l-40.83-9.721l-14-3.5h-1.944v1.167l11.666 11.406l21.387 19.314l26.767 24.887l1.36 6.157l-3.434 4.86l-3.63-.518l-23.526-17.693l-9.073-7.972l-20.545-17.304h-1.36v1.814l4.73 6.935l25.017 37.59l1.296 11.536l-1.814 3.76l-6.481 2.268l-7.13-1.297l-14.647-20.544l-15.1-23.138l-12.185-20.739l-1.49.843l-7.194 77.448l-3.37 3.953l-7.778 2.981l-6.48-4.925l-3.436-7.972l3.435-15.749l4.148-20.544l3.37-16.333l3.046-20.285l1.815-6.74l-.13-.454l-1.49.194l-15.295 20.999l-23.267 31.433l-18.406 19.702l-4.407 1.75l-7.648-3.954l.713-7.064l4.277-6.286l25.47-32.405l15.36-20.092l9.917-11.6l-.065-1.686h-.583L44.07 198.125l-12.055 1.555l-5.185-4.86l.648-7.972l2.463-2.593l20.35-13.999z"/></svg>
-          </a>
-          <a class="quick-link" href="https://github.com/asrospigliosi" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--text)"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-          </a>
-          <a class="quick-link" href="https://onboard.windsor.ai/app/" target="_blank" rel="noopener" title="Windsor.ai" aria-label="Windsor.ai">
-            <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="12" fill="var(--windsor-bg)" stroke="var(--border)" stroke-width="0.5"/><text x="12" y="12.7" dominant-baseline="central" text-anchor="middle" font-family="-apple-system,Segoe UI,Arial,sans-serif" font-weight="700" font-size="15" fill="var(--windsor-fg)">W.</text></svg>
-          </a>
-        </div>
       </div>
       <button class="theme-toggle" id="theme-toggle" type="button" title="Cambiar tema" aria-label="Cambiar tema claro u oscuro">
         <i class="ti ti-moon" id="theme-toggle-icon" aria-hidden="true"></i>
@@ -258,7 +254,6 @@
   </header>
 
   <div class="group-section">
-    <div class="group-title">Sales</div>
     <div class="grid" id="grid-sales"></div>
   </div>
 
@@ -296,10 +291,10 @@ const BRANDS = [
   { name: "Coolbrands", code: "COB", group: "O&M", owner: "alvaro", logo: null, web: "https://coolbrands.pe/", facebook: "https://www.facebook.com/coolbrandspe/", instagram: "https://www.instagram.com/coolbrands_peru/", tiktok: "https://www.tiktok.com/@coolbrandsperu", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1375532696023567&business_id=144307969512265&global_scope_id=144307969512265&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Cpurchase_roas%3Aomni_purchase&attribution_windows=default&date=2026-03-01_2026-03-10%2Cthis_month&insights_date=2026-03-01_2026-03-10%2Cthis_month&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING%1ECONTAINS_ALL%1E%22[%5C%22[COOLBRANDS]%5C%22]%22", google: "https://ads.google.com/aw/campaigns?ocid=8080559262&ascid=8080559262&euid=1627945411&__u=8458008939&uscid=1128799660&__c=2167211340&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/19A4DQw0EXQyF_Y1wSDF3AkFyN_MEGx1DQrm4UcnsOZE/edit?gid=1526226749#gid=1526226749", seguimiento: "https://docs.google.com/spreadsheets/d/16-AVnO6MjEDjaBQ6Z9BRkKdlwqDIrLSYCiYexRxJyMc/edit?gid=1999751784#gid=1999751784", general: "https://datastudio.google.com/u/0/reporting/cbf971f0-a66b-4ac0-95fe-342c17fe79cc/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/coolbrandsperu/", mailchimp: "https://us6.admin.mailchimp.com/campaigns/?page=1&searchText=COB" }, drive: "https://drive.google.com/drive/folders/1VJdDeqjjhs08yZBwQ6roPkr6eeaP47ZI", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a187389221p396799613/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
   { name: "the friend of Pablo", code: "TFP", group: null, owner: "alvaro", logo: null, web: "https://thefriendofpablo.pe/", facebook: "https://www.facebook.com/thefriendofpablo/", instagram: "https://www.instagram.com/thefriendofpablo/", tiktok: "https://www.tiktok.com/@thefriendofpablo", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=322338366248995&business_id=581206129729745&global_scope_id=581206129729745&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Alink_click%2Cactions%3Aonsite_conversion.total_messaging_connection%2Cactions%3Aonsite_conversion.messaging_first_reply%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Ccost_per_action_type%3Aomni_purchase&attribution_windows=default&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING_SET%1ECONTAINS_ALL%1E[%22TFOP%20%7C%22]", google: "https://ads.google.com/aw/campaigns?ocid=8015344268&workspaceId=0&euid=1627945411&__u=8458008939&uscid=8015344268&__c=8645023532&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/19VCdqO4u-B7XhuTwlv3K4BjkwDdsp0RKfd7AE-_XetY/edit", seguimiento: "https://docs.google.com/spreadsheets/d/1dnupM0Ummaeu6USPp9HxkJTIoscrr46s9LJLYoHaLn8/edit?gid=504747791#gid=504747791", general: "https://datastudio.google.com/u/0/reporting/f9ef9751-23c8-43a5-abf1-b0aebd82fc3a/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/the-friend-of-pablo" }, drive: "https://drive.google.com/drive/folders/1aMBimfMLxUKcnCw0eNX0qFC4ThOiiqzQ", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a148797051p211103684/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=aaa1661c-b9ff-45be-8138-5572bb6bf3a1&collectionId=10819104498&r=lifecycle-traffic-acquisition-v2" },
   { name: "Jockey", code: "JOC", group: "Reprind", owner: "alvaro", logo: null, web: "https://www.jockey.com.pe/", facebook: "https://www.facebook.com/people/Jockey-Per%C3%BA/61578013049742/", instagram: null, tiktok: null, ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=3238960092919348&business_id=2700374530300569&global_scope_id=2700374530300569&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING_SET%1ECONTAINS_ALL%1E[%22JO%22]" }, docs: { plan: null, seguimiento: "https://docs.google.com/spreadsheets/d/1dpaCpV4w6DYzvCAARzYsKPlfT1zRk8KOsMxmEcfnA6s/edit?gid=1918060092#gid=1918060092", general: null }, accesos: { shopify: "https://admin.shopify.com/store/jockey-shop-online/" }, drive: "https://drive.google.com/drive/folders/1Lr1BVLYVg73Tfh6Tkw3ZgAjk31G_EX62", analytics: null },
-  { name: "Koketa Perú", code: "KOK", group: "Reprind", owner: "abigail", logo: null, web: "https://www.koketa.com/", facebook: "https://www.facebook.com/SoyKoketa/", instagram: "https://www.instagram.com/koketaoficial/", tiktok: "https://www.tiktok.com/@koketaoficial", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=237930767117528&business_id=1936279589935494&global_scope_id=1936279589935494&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Cpurchase_roas%3Aomni_purchase&attribution_windows=default&date=2026-03-01_2026-03-07%2Cthis_month&insights_date=2026-03-01_2026-03-07%2Cthis_month", google: "https://ads.google.com/aw/campaigns?ocid=6808352631&workspaceId=0&euid=1627945411&__u=8458008939&uscid=6808352631&__c=7465838719&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/126xt_SVI_WIYIOOrF4ezoaWm64eAHsdc86FybnXJpuo/edit?gid=1526226749#gid=1526226749", seguimiento: "https://docs.google.com/spreadsheets/d/1XESJUAZKkYsAGzUxIhwFdiLCCqiyftK_GfKxJB_ReKA/edit?gid=1918060092#gid=1918060092", general: "https://datastudio.google.com/u/0/reporting/c00d135f-7154-461e-b356-500b67c44b9a/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/koketa-online?no_redirect=true" }, drive: "https://drive.google.com/drive/folders/1rHq0kHggsl60hp5btaNto2wYQ__Cpy4p", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a385151580p525403687/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
-  { name: "Koketa Chile", code: "KOC", group: "Reprind", owner: "abigail", logo: null, web: "https://koketachile.com/", facebook: null, instagram: "https://www.instagram.com/koketaoficialchile/", tiktok: null, ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=2278042329603462&business_id=875388745640693&date=2026-10-01_2026-10-08%2Cthis_month", google: "https://ads.google.com/aw/campaigns?ocid=8374882706&workspaceId=0&euid=6549620284&__u=7422241116&uscid=8374882706&__c=8272747394&authuser=7&tableState=OhYKFAoHCOoPEAoYARIHCOoPEAoYBzAASAFQAYABCogBAdABA9gBA5ACAJoCNxIVc2VnbWVudGF0aW9uX2luZm8uZGF5GhZzdGF0cy5jb252ZXJzaW9uX3ZhbHVlGgAaABoAOAE%3D" }, docs: { plan: null, seguimiento: "https://docs.google.com/spreadsheets/d/1uhEmhN_vKpAZMye8kAJRJIm5H-Ym1PC8zZb3LqbueZA/edit?gid=364632693#gid=364632693", general: null }, accesos: { shopify: "https://admin.shopify.com/store/koketa-chile-2" }, drive: null, analytics: null },
+  { name: "Koketa PE", code: "KOK", group: "Reprind", owner: "abigail", logo: null, web: "https://www.koketa.com/", facebook: "https://www.facebook.com/SoyKoketa/", instagram: "https://www.instagram.com/koketaoficial/", tiktok: "https://www.tiktok.com/@koketaoficial", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=237930767117528&business_id=1936279589935494&global_scope_id=1936279589935494&columns=name%2Cdelivery%2Crecommendations_guidance%2Cresults%2Ccost_per_result%2Cbudget%2Cspend%2Cimpressions%2Creach%2Cfrequency%2Ccpm%2Cactions%3Aomni_purchase%2Cschedule%2Cend_time%2Cattribution_setting%2Cbid%2Clast_significant_edit%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Ccampaign_name%2Cpurchase_roas%3Aomni_purchase&attribution_windows=default&date=2026-03-01_2026-03-07%2Cthis_month&insights_date=2026-03-01_2026-03-07%2Cthis_month", google: "https://ads.google.com/aw/campaigns?ocid=6808352631&workspaceId=0&euid=1627945411&__u=8458008939&uscid=6808352631&__c=7465838719&authuser=0" }, docs: { plan: "https://docs.google.com/spreadsheets/d/126xt_SVI_WIYIOOrF4ezoaWm64eAHsdc86FybnXJpuo/edit?gid=1526226749#gid=1526226749", seguimiento: "https://docs.google.com/spreadsheets/d/1XESJUAZKkYsAGzUxIhwFdiLCCqiyftK_GfKxJB_ReKA/edit?gid=1918060092#gid=1918060092", general: "https://datastudio.google.com/u/0/reporting/c00d135f-7154-461e-b356-500b67c44b9a/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/koketa-online?no_redirect=true" }, drive: "https://drive.google.com/drive/folders/1rHq0kHggsl60hp5btaNto2wYQ__Cpy4p", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a385151580p525403687/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
+  { name: "Koketa CL", code: "KOC", group: "Reprind", owner: "abigail", logo: null, web: "https://koketachile.com/", facebook: null, instagram: "https://www.instagram.com/koketaoficialchile/", tiktok: null, ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=2278042329603462&business_id=875388745640693&date=2026-10-01_2026-10-08%2Cthis_month", google: "https://ads.google.com/aw/campaigns?ocid=8374882706&workspaceId=0&euid=6549620284&__u=7422241116&uscid=8374882706&__c=8272747394&authuser=7&tableState=OhYKFAoHCOoPEAoYARIHCOoPEAoYBzAASAFQAYABCogBAdABA9gBA5ACAJoCNxIVc2VnbWVudGF0aW9uX2luZm8uZGF5GhZzdGF0cy5jb252ZXJzaW9uX3ZhbHVlGgAaABoAOAE%3D" }, docs: { plan: null, seguimiento: "https://docs.google.com/spreadsheets/d/1uhEmhN_vKpAZMye8kAJRJIm5H-Ym1PC8zZb3LqbueZA/edit?gid=364632693#gid=364632693", general: null }, accesos: { shopify: "https://admin.shopify.com/store/koketa-chile-2" }, drive: null, analytics: null },
   { name: "CROMO", code: "CRO", group: null, owner: "abigail", logo: null, web: "https://cromopolos.com/", facebook: "https://www.facebook.com/cromotienda", instagram: "https://www.instagram.com/cromopolos/", tiktok: "https://www.tiktok.com/@cromo.polos", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1222685089498201&business_id=194587377840846&global_scope_id=194587377840846&date=2026-03-01_2026-03-13%2Cthis_month&insights_date=2026-03-01_2026-03-13%2Cthis_month", google: "https://ads.google.com/aw/campaigns?ocid=8026491243&workspaceId=0&euid=1627945411&__u=8458008939&uscid=8026491243&__c=2886180307&authuser=0&subid=ww-ww-xs-ip-awhc-a-ogb_dash%21o2-PE-es-xs-ip-ogb_ai-sf-dw-uao-agembe-acce" }, docs: { plan: "https://docs.google.com/spreadsheets/d/1LK8nGIqdk-Act1bjMJvXe9KqHMol7mI4ckBmSrcLLow/edit?gid=1249293528#gid=1249293528", seguimiento: "https://docs.google.com/spreadsheets/d/1CYhz61SQEr-vPKLpH1Yln-AbAAZ6SIRArEsW1S1NNGs/edit?gid=32446709#gid=32446709", general: "https://datastudio.google.com/u/0/reporting/8483e5eb-c12f-4aa9-a89b-262bf47c172a/page/K0SrF" }, accesos: { shopify: "https://admin.shopify.com/store/cromoperu" }, drive: "https://drive.google.com/drive/folders/1836E8_hUTaAm2qGNcNVNvuDY7WyIX2O0", analytics: "https://analytics.google.com/analytics/web/?authuser=0#/a384577704p524802621/reports/explorer?params=_u..nav%3Dmaui%26_u.dateOption%3DthisMonth%26_u.comparisonOption%3Ddisabled&ruid=lifecycle-traffic-acquisition-v2,business-objectives,generate-leads&collectionId=business-objectives&r=lifecycle-traffic-acquisition-v2" },
-  { name: "MICRO", code: "MIC", group: null, owner: "abigail", logo: null, web: "https://microperu.com/", facebook: "https://www.facebook.com/MicroPeru/", instagram: "https://www.instagram.com/micro_peru/", tiktok: "https://www.tiktok.com/@microperu", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=2319063375567561&business_id=1070041848736008&global_scope_id=1070041848736008&nav_entry_point=am_global_scope_selector&treenav=true&date=2026-08-01_2026-08-14%2Cthis_month&insights_date=2026-08-01_2026-08-14%2Cthis_month&comparison_date=&insights_comparison_date=", google: null }, docs: { plan: "https://docs.google.com/spreadsheets/d/1z9YeKcFeInHa3Y2EPg4XPlxMZr4On59qnIL1MfhpxoI/edit?usp=drive_web&ouid=108122975220586760207", seguimiento: "https://docs.google.com/spreadsheets/d/1lWlYxhnbzsFzxdMzQNCzaBgweVJEdxdGWWajVbIqGp0/edit?gid=1658285424#gid=1658285424", general: null }, accesos: { shopify: "https://admin.shopify.com/store/3d9a5c-69" }, drive: "https://drive.google.com/drive/folders/1lI6TFpBkR7pxTb0amu8dm5GNugwgQ5BM", analytics: null },
+  { name: "Micro PE", code: "MIC", group: null, owner: "abigail", logo: null, web: "https://microperu.com/", facebook: "https://www.facebook.com/MicroPeru/", instagram: "https://www.instagram.com/micro_peru/", tiktok: "https://www.tiktok.com/@microperu", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=2319063375567561&business_id=1070041848736008&global_scope_id=1070041848736008&nav_entry_point=am_global_scope_selector&treenav=true&date=2026-08-01_2026-08-14%2Cthis_month&insights_date=2026-08-01_2026-08-14%2Cthis_month&comparison_date=&insights_comparison_date=", google: null }, docs: { plan: "https://docs.google.com/spreadsheets/d/1z9YeKcFeInHa3Y2EPg4XPlxMZr4On59qnIL1MfhpxoI/edit?usp=drive_web&ouid=108122975220586760207", seguimiento: "https://docs.google.com/spreadsheets/d/1lWlYxhnbzsFzxdMzQNCzaBgweVJEdxdGWWajVbIqGp0/edit?gid=1658285424#gid=1658285424", general: null }, accesos: { shopify: "https://admin.shopify.com/store/3d9a5c-69" }, drive: "https://drive.google.com/drive/folders/1lI6TFpBkR7pxTb0amu8dm5GNugwgQ5BM", analytics: null },
   { name: "Planeta Diseño", code: "PLD", group: null, logo: null, web: "https://planetadiseno.com/", facebook: null, instagram: "https://www.instagram.com/cuadros.planeta.diseno/", tiktok: null, ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=546650019663577&business_id=1226875077647376&simplified_creation=true&global_scope_id=1226875077647376&nav_entry_point=am_global_scope_selector&column_preset=PERFORMANCE&date=2026-10-01_2026-10-14%2Cthis_month&comparison_date=&insights_date=2026-10-01_2026-10-14%2Cthis_month&insights_comparison_date=&filter_set=SEARCH_BY_CAMPAIGN_GROUP_NAME-STRING_SET%1ECONTAINS_ALL%1E[%22PD%20%7C%20%22]&selected_adset_ids=120250109997760143", google: null }, docs: { plan: null, seguimiento: null, general: null }, accesos: { shopify: null }, drive: null, analytics: null },
   { name: "Avanzar Therapy", code: "AVT", group: null, logo: null, web: "https://www.avanzartherapyperu.com/", facebook: "https://www.facebook.com/avanzartherapy/", instagram: "https://www.instagram.com/avanzartherapy/", tiktok: null, ads: { meta: { Miraflores: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1029848679355851&business_id=1711851329121005&global_scope_id=1711851329121005&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=", Surco: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=655442703744379&business_id=1711851329121005&global_scope_id=1711851329121005&date=2026-07-01_2026-07-05%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-05%2Cthis_month&insights_comparison_date=" } } },
   { name: "Ventia", hidden: true, code: "VEN", group: null, logo: null, web: "https://www.ventia-latam.com/", facebook: null, instagram: "https://www.instagram.com/ventia_latam/", tiktok: "https://www.tiktok.com/@ventia_latam", ads: { meta: "https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1453250373181751&business_id=792512220155282&global_scope_id=792512220155282&date=2026-07-01_2026-07-28%2Cthis_month&comparison_date=&insights_date=2026-07-01_2026-07-28%2Cthis_month&insights_comparison_date=" }, docs: { seguimiento: "https://docs.google.com/spreadsheets/d/1kQoTg_T0dOoKFjvAz7Xx584Q5U9n1m0pd9jlwIH4Nxw/edit?gid=8228821#gid=8228821" }, drive: "https://drive.google.com/drive/folders/1MgIpHW1em2R7u_xorFviZtnJcRMc09jw" },
@@ -420,13 +415,15 @@ function shortUrl(url) {
 const ICON_ONLY_LABELS = ["Web", "Meta Ads", "Google Ads", "TikTok Ads", "Analytics", "Shopify", "Mailchimp", "Drive", "Reporte general"];
 
 function linkChip(label, url, brandName, opts = {}) {
-  const icon = iconMarkup(label);
+  const isDoc = ["Plan de medios", "Seguimiento", "Leads"].includes(label);
+  const icon = isDoc ? "" : iconMarkup(label);
   const displayText = opts.displayText !== undefined ? opts.displayText : label;
   const iconOnly = opts.iconOnly !== undefined ? opts.iconOnly : ICON_ONLY_LABELS.includes(label);
   const text = iconOnly ? "" : displayText;
   const titleAttr = text !== label ? ` title="${label}"` : "";
   if (url) {
-    return `<a class="link-chip track-link" href="${url}" target="_blank" rel="noopener" data-brand="${brandName}" data-label="${label}"${titleAttr}>${icon}${text}</a>`;
+    const docCls = isDoc ? " doc-chip" : "";
+    return `<a class="link-chip track-link${docCls}" href="${url}" target="_blank" rel="noopener" data-brand="${brandName}" data-label="${label}"${titleAttr}>${icon}${text}</a>`;
   }
   return `<span class="link-chip pending"${titleAttr}>${icon}${text}</span>`;
 }
@@ -434,9 +431,6 @@ function linkChip(label, url, brandName, opts = {}) {
 // Fila 1: accesos web/plataforma — Shopify, Analytics, Looker (reporte general), Drive
 function buildRow1(brand) {
   const chips = [];
-  if (brand.accesos) {
-    chips.push(linkChip("Shopify", brand.accesos.shopify, brand.name));
-  }
   if (brand.analytics !== undefined) {
     chips.push(linkChip("Analytics", brand.analytics, brand.name));
   }
@@ -452,10 +446,13 @@ function buildRow1(brand) {
 // Fila 2: Ads — Google Ads, Meta Ads + otros links (Mailchimp, TikTok Ads, etc.)
 function buildRow2(brand) {
   const chips = [];
+  if (brand.accesos) {
+    chips.push(linkChip("Shopify", brand.accesos.shopify, brand.name));
+  }
   if (brand.ads.google !== undefined) chips.push(linkChip("Google Ads", brand.ads.google, brand.name));
   if (brand.ads.meta && typeof brand.ads.meta === "object") {
     Object.entries(brand.ads.meta).forEach(([sede, url]) => {
-      chips.push(linkChip(`Meta Ads ${sede}`, url, brand.name, { displayText: sede, iconOnly: false }));
+      chips.push(linkChip(`Meta Ads ${sede}`, url, brand.name, { displayText: ({ Miraflores: "MIF", Surco: "SUR" })[sede] || sede, iconOnly: false }));
     });
   } else {
     chips.push(linkChip("Meta Ads", brand.ads.meta, brand.name));
@@ -472,13 +469,13 @@ function buildRow2(brand) {
 function buildRow3(brand) {
   const chips = [];
   if (brand.docs) {
-    if ("plan" in brand.docs) chips.push(linkChip("Plan de medios", brand.docs.plan, brand.name));
+    if ("plan" in brand.docs) chips.push(linkChip("Plan de medios", brand.docs.plan, brand.name, { displayText: "PDM" }));
     if (brand.name === "Ventia" && brand.drive !== undefined) {
       chips.push(linkChip("Drive", brand.drive, brand.name));
     }
     if ("seguimiento" in brand.docs) {
       const label = brand.name === "Ventia" ? "Leads" : "Seguimiento";
-      chips.push(linkChip(label, brand.docs.seguimiento, brand.name));
+      chips.push(linkChip(label, brand.docs.seguimiento, brand.name, { displayText: "SEG" }));
     }
   }
   return chips.join("");
@@ -497,7 +494,7 @@ function socialIcon(key, url, title) {
    marca que no esté en esta lista cae en "Sales". */
 const LEADS_BRANDS = ["Ventia", "Avanzar Therapy"];
 
-const VERIFIED_BADGE_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.78L23,12M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z"/></svg>';
+const VERIFIED_BADGE_SVG = '<svg viewBox="0 0 24 24"><path fill="var(--badge-bg)" d="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.78L23,12Z"/><path fill="var(--badge-check)" d="M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z"/></svg>';
 
 /* owner: quien gestiona la cuenta (checklist visual, color del avatar).
    "alvaro" mantiene el azul por defecto; "abigail" usa el morado #a374ff.
@@ -506,7 +503,15 @@ const FLAG_SVGS = {
   pe: '<svg viewBox="0 0 18 12" width="16" height="11" style="border-radius:2px;flex-shrink:0;display:block"><rect width="18" height="12" fill="#D91023"/><rect x="6" width="6" height="12" fill="#fff"/></svg>',
   cl: '<svg viewBox="0 0 18 12" width="16" height="11" style="border-radius:2px;flex-shrink:0;display:block"><rect width="18" height="12" fill="#D52B1E"/><rect width="18" height="6" fill="#fff"/><rect width="6" height="6" fill="#0039A6"/><path d="M3 1.2l.67 2.06h2.16L4.08 4.5l.67 2.06L3 5.3 1.25 6.56l.67-2.06L.17 3.26h2.16z" fill="#fff" transform="translate(0 -.6) scale(1)"/></svg>'
 };
-const OWNER_COLORS ={ alvaro: "#3797EF", abigail: "#a374ff" };
+/* Nombre abreviado que se muestra en la tarjeta (el nombre completo queda como tooltip). */
+/* Prueba: false = nombre completo capitalizado; true = abreviaturas. */
+const USE_SHORT_NAMES = false;
+const SHORT_NAMES = {
+  "The Box": "TB", "Coolbrands": "CB", "the friend of Pablo": "TFOP", "Jockey": "JOC",
+  "Koketa PE": "KOPE", "Koketa CL": "KOCL", "CROMO": "CRO", "Micro PE": "MIC",
+  "Planeta Diseño": "PD", "Avanzar Therapy": "AT"
+};
+const OWNER_COLORS = { alvaro: "#3797EF", abigail: "#a374ff" };
 
 function buildCard(b) {
   const card = document.createElement("div");
@@ -518,7 +523,7 @@ function buildCard(b) {
     <div class="card-head">
       <div class="card-head-left">
         <div class="avatar"${avatarStyle} title="${b.owner === "alvaro" ? "Alvaro" : b.owner === "abigail" ? "Abigail" : ""}">${avatarInner}</div>
-        <div class="card-name">${b.name}</div>
+        <div class="card-name" title="${b.name}">${USE_SHORT_NAMES ? (SHORT_NAMES[b.name] || b.name) : b.name}</div>
         ${b.flag ? FLAG_SVGS[b.flag] : ""}
       </div>
       <div class="card-social">
@@ -530,8 +535,7 @@ function buildCard(b) {
     </div>
     <div class="link-rows">
       <div class="link-row">${buildRow2(b)}</div>
-      <div class="link-row">${buildRow1(b)}</div>
-      <div class="link-row">${buildRow3(b)}</div>
+      <div class="link-row">${buildRow1(b)}${buildRow3(b)}</div>
     </div>
   `;
 
